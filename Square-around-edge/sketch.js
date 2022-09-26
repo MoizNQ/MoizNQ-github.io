@@ -30,16 +30,19 @@ function movingSquare() {
   if (x >= 0 && y <= 0 && x <= windowWidth-squareSize) {
     y = 0;
     x += speed;
+    fill("pink");
   }
   // right state
   else if (x >= windowWidth-squareSize && y >= 0 && y <= windowHeight-squareSize) {
     x = windowWidth-squareSize;
     y += speed;
+    fill("grey");
   }
   // left state
   else if (x <= windowWidth-squareSize && y >= windowHeight-squareSize && x>=0) {
     y = windowHeight-squareSize;
     x -= speed;
+    fill("black");
   }
   // up state
   else if (x<= 0 && y<= windowHeight-squareSize && y >=0) {
