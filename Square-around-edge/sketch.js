@@ -15,13 +15,14 @@ function setup() {
 }
 
 function draw() {
-  background(225);
+  background(255);
   drawSquare();
   movingSquare();
 }
 
 function drawSquare() {
   square(x, y, squareSize);
+  fill("red");
 }
 
 function movingSquare() { 
