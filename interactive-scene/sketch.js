@@ -31,14 +31,17 @@ function draw() {
   image(mapp, 0, 0, windowWidth, windowHeight);
   image(figuree, 0, 0, 80, 80);
   image(crosshair, mouseX, mouseY, crosshair.width*scalar, crosshair.height*scalar);
-  keyTyped();
+  keyIsDown();
 }
 
-function keyTyped() {
+// eslint-disable-next-line no-redeclare
+function keyIsDown() {
   if (key === UP_ARROW) {
     scalar = + 0.01;
+    scalar = button;
   }
   else if (key === DOWN_ARROW) {
     scalar = - 0.01;
+    scalar = button;
   }
 }
