@@ -3,10 +3,8 @@
 // Sept 21, 2022
 //
 // Extra for Experts:
-// - describe what you did to take this project "above and beyond"
+// - Learning how to use gradient for background changes, 
 
-const X_AXIS = 1;
-const Y_AXIS = 2;
 let mapp;
 let crosshair;
 let figuree;
@@ -18,11 +16,14 @@ let mouseCursor;
 let state = "start";
 let color1;
 let color2;
+let gunn;
+let previousTime = 0;
 
 function preload() {
   mapp = loadImage("Map.jpeg");
   crosshair = loadImage("crosshair.jpeg");
   figuree = loadImage("figure.jpeg");
+  gunn = loadImage("gun.jpeg");
 }
 
 function setup() {
@@ -31,11 +32,12 @@ function setup() {
   if (state === "main") {
     noCursor();
   }
+  colorMode(HSB, 360, 100, 100, 100);
 }
 
 function draw() {
   background(220);
-  image(mapp, 0, 0, windowWidth, windowHeight);
+  image(gunn, 0, 0, windowWidth, windowHeight);
 
   keyIsDown();
   if (state === "start") {
@@ -46,29 +48,48 @@ function draw() {
     image(figuree, 0, 0, 80, 80);
     image(crosshair, mouseX, mouseY, crosshair.width*scalar, crosshair.height*scalar);
   }
-}
 
-class figure {
 
-}
+  class figure {
 
-function mousePressed() {
-  if (state === "start" && mouseInsideRect(windowWidth/2.5, windowWidth/2.5+250, windowHeight/2.5, windowHeight/2.5+150)) {
-    state = "main";
+  }
+
+  function mousePressed() {
+    if (state === "start" && mouseInsideRect(windowWidth/2.5, windowWidth/2.5+250, windowHeight/2.5, windowHeight/2.5+150)) {
+      state = "main";
+      data();
+    }
+  }
+
+  function data() {
+    theTime = round(millis()/1000) - round(previousTime/1000);
+    textSize(20);
+    stroke(255);
+    fill(255);
+    textAlign(RIGHT);
+    text("TIME: " + theTime, 0.75 * windowWidth/3, windowHeight/20);
   }
 }
 
 function startScreen() {
+  let gradient = drawingContext.createLinearGradient(width/2.5-200, width/2.5-200, height/2.5+200, height/2.5+200);
+  gradient.addColorStop(0, color(200, 50, 100, 150));
+  gradient.addColorStop(1, color(250, 100, 50, 50));
+  rect(width/2.5, height/2.5, 250, 150, 20);
+  stroke(255);
+  strokeWeight(1);
+
   if (mouseInsideRect(windowWidth/2.5, windowWidth/2.5+250, windowHeight/2.5, windowHeight/2.5+150)) {
-    fill("gray");
+    drawingContext.strokeStyle = gradient;
+    textSize(50);
+    text("START", width/2.35, height/1.95,);
   }
   else {
-    fill("black");
+    drawingContext.fillStyle = gradient;
+    textSize(50);
+    text("START", width/2.35, height/1.95,);  
   }
-  rect(width/2.5, height/2.5, 250, 150, 20);
-  makeGradient(width/2.5, height/2.5, 250, 150, red, blue, 20);
-  textSize(50);
-  text("START", width/2.35, height/1.95);
+  
 }
 
 function mouseInsideRect(left, right, top, bottom) {
@@ -77,30 +98,4 @@ function mouseInsideRect(left, right, top, bottom) {
 
 function characterAppearence() {
 
-}
-
-function makeGradient(x, y, w, h, color1, color2, axis) {
-  noFill();
-
-  if (axis === X_AXIS) {
-    // Left to right gradient
-    for (let i = x; i <= x + w; i++) {
-      let inter = map(i, windowWidth/2.5, windowWidth/2.5+250, 0, 1);
-      let c = lerpColor(color1, color2, inter);
-      stroke(c);
-      line(i, windowHeight/2.5, i, windowHeight/2.5+150);
-    }
-  }
-}
-
-// eslint-disable-next-line no-redeclare
-function keyIsDown() {
-  if (key === UP_ARROW) {
-    scalar = + 0.01;
-    scalar = button;
-  }
-  else if (key === DOWN_ARROW) {
-    scalar = - 0.01;
-    scalar = button;
-  }
 }
