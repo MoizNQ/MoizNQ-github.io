@@ -73,8 +73,8 @@ function draw() {
 
 function startScreen() {
   let gradient = drawingContext.createLinearGradient(width/2.5-200, width/2.5-200, height/2.5+200, height/2.5+200);
-  gradient.addColorStop(0, color(200, 50, 100, 150));
-  gradient.addColorStop(1, color(250, 100, 50, 50));
+  gradient.addColorStop(0, color(80, 230, 0, 250));
+  gradient.addColorStop(1, color(10, 40, 0, 60));
   rect(width/2.5, height/2.5, 250, 150, 20);
   stroke(255);
   strokeWeight(1);
