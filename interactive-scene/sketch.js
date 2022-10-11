@@ -5,6 +5,8 @@
 // Extra for Experts:
 // - Learning how to use gradient for background changes, 
 
+let x;
+let y;
 let mapp;
 let crosshair;
 let figuree;
@@ -17,13 +19,18 @@ let state = "start";
 let color1;
 let color2;
 let gunn;
+let bulet;
+let bulets = [];
 let previousTime = 0;
+let spawns = [(x, y)];
+let spawn = random.spawns((226, 438), (446, 392), (862, 493), (862, 493), (1430, 472));
 
 function preload() {
   mapp = loadImage("Map.jpeg");
   crosshair = loadImage("crosshair.jpeg");
   figuree = loadImage("figure.jpeg");
   gunn = loadImage("gun.jpeg");
+  bulet = loadImage("bullet.png");
 }
 
 function setup() {
@@ -45,36 +52,40 @@ function draw() {
   }
   if (state === "main") {
     image(mapp, 0, 0, windowWidth, windowHeight);
-    image(figuree, 0, 0, 80, 80);
+    image(figuree, spawn);
     image(crosshair, mouseX, mouseY, crosshair.width*scalar, crosshair.height*scalar);
   }
-
-
-  class figure {
-
-  }
-
-  function mousePressed() {
-    if (state === "start" && mouseInsideRect(windowWidth/2.5, windowWidth/2.5+250, windowHeight/2.5, windowHeight/2.5+150)) {
-      state = "main";
-      data();
-    }
-  }
-
-  function data() {
-    theTime = round(millis()/1000) - round(previousTime/1000);
-    textSize(20);
-    stroke(255);
-    fill(255);
-    textAlign(RIGHT);
-    text("TIME: " + theTime, 0.75 * windowWidth/3, windowHeight/20);
+  for (let bulet of bulets){
+    image(bulets.x, bulets.y, 10);
   }
 }
 
+function mousePressed() {
+  if (state === "start" && mouseInsideRect(windowWidth/2.5, windowWidth/2.5+250, windowHeight/2.5, windowHeight/2.5+150)) {
+    state = "main";
+  }
+  let bulet = {
+    x: mouseX,
+    y: mouseY,
+  };
+  bulets.push(bulet);
+}
+
+function data() {
+  state = "main";
+  theTime = round(millis()/1000) - round(previousTime/1000);
+  textSize(20);
+  stroke(255);
+  fill(255);
+  textAlign(RIGHT);
+  text("TIME: " + theTime, 0.75 * windowWidth/3, windowHeight/20);
+}
+
+
 function startScreen() {
-  let gradient = drawingContext.createLinearGradient(width/2.5-200, width/2.5-200, height/2.5+200, height/2.5+200);
-  gradient.addColorStop(0, color(80, 230, 0, 250));
-  gradient.addColorStop(1, color(10, 40, 0, 60));
+  let gradient = drawingContext.createLinearGradient(width/2.5-200, width/2.5-200, height/2.5+150, height/2.5+200);
+  gradient.addColorStop(0, color(254, 60, 110, 65));
+  gradient.addColorStop(1, color(172, 60, 110, 65));
   rect(width/2.5, height/2.5, 250, 150, 20);
   stroke(255);
   strokeWeight(1);
