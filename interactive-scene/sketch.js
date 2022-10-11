@@ -23,7 +23,7 @@ let bulet;
 let bulets = [];
 let previousTime = 0;
 let spawns = [(x, y)];
-let spawn = random.spawns((226, 438), (446, 392), (862, 493), (862, 493), (1430, 472));
+let spawn;
 
 function preload() {
   mapp = loadImage("Map.jpeg");
@@ -40,6 +40,7 @@ function setup() {
     noCursor();
   }
   colorMode(HSB, 360, 100, 100, 100);
+  spawn = random([[226, 438], [446, 392], [862, 493], [862, 493], [1430, 472]]);
 }
 
 function draw() {
