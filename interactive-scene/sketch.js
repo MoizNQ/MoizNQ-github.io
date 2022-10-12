@@ -9,7 +9,7 @@ let x;
 let y;
 let mapp;
 let crosshair;
-let figuree;
+let figuree, figureeDirection, figureeWidth, figureeHeight, figureeX, figureeY;
 let scalar = 0.3;
 let button = false;
 let theTime;
@@ -19,28 +19,24 @@ let state = "start";
 let color1;
 let color2;
 let gunn;
-let bulet;
-let bulets = [];
+let bullets = [];
 let previousTime = 0;
-let spawns = [(x, y)];
-let spawn;
+let machine;
 
 function preload() {
   mapp = loadImage("Map.jpeg");
   crosshair = loadImage("crosshair.jpeg");
   figuree = loadImage("figure.jpeg");
   gunn = loadImage("gun.jpeg");
-  bulet = loadImage("bullet.png");
+  machine = loadImage("bullet.png");
 }
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
-  // hiding cursor
-  if (state === "main") {
-    noCursor();
-  }
   colorMode(HSB, 360, 100, 100, 100);
-  spawn = random([[226, 438], [446, 392], [862, 493], [862, 493], [1430, 472]]);
+  figureeWidth = windowWidth/8;
+  figureeHeight = windowHeight/12;
+  figureeDirection = 1;
 }
 
 function draw() {
@@ -52,12 +48,14 @@ function draw() {
     startScreen();
   }
   if (state === "main") {
+    noCursor;
     image(mapp, 0, 0, windowWidth, windowHeight);
-    image(figuree, spawn);
+    image(figuree);
+    figureMovement();
     image(crosshair, mouseX, mouseY, crosshair.width*scalar, crosshair.height*scalar);
   }
-  for (let bulet of bulets){
-    image(bulets.x, bulets.y, 10);
+  for (let bullet of bullets){
+    image(machine, mouseX + 18, mouseY -8, 15, 30);
   }
 }
 
@@ -65,11 +63,11 @@ function mousePressed() {
   if (state === "start" && mouseInsideRect(windowWidth/2.5, windowWidth/2.5+250, windowHeight/2.5, windowHeight/2.5+150)) {
     state = "main";
   }
-  let bulet = {
+  let bullet = {
     x: mouseX,
-    y: mouseY,
+    y: mouseY 
   };
-  bulets.push(bulet);
+  bullets.push(bullet);
 }
 
 function data() {
@@ -108,6 +106,14 @@ function mouseInsideRect(left, right, top, bottom) {
   return mouseX >= left && mouseX <= right && mouseY >= top && mouseY <= bottom;
 }
 
-function characterAppearence() {
+function figureMovement() {
+  figureeX += windowWidth/(400/6) * figureeDirection;
+  
+  if (figureeX + figureeWidth/2 >= windowWidth) {
+    figureeDirection = -1;
+  }
 
+  else if (figureeX <= 0 -figureeWidth/2) {
+    figureeDirection = 1;
+  }
 }
