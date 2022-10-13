@@ -9,7 +9,7 @@ let x;
 let y;
 let mapp;
 let crosshair;
-let figuree, figureeDirection, figureeWidth, figureeHeight, figureeX, figureeY;
+let enemy, enemyDirection, enemyWidth, enemyHeight, enemyX, enemyY;
 let scalar = 0.3;
 let button = false;
 let theTime;
@@ -26,7 +26,7 @@ let machine;
 function preload() {
   mapp = loadImage("Map.jpeg");
   crosshair = loadImage("crosshair.jpeg");
-  figuree = loadImage("figure.jpeg");
+  enemy = loadImage("character.JPEG");
   gunn = loadImage("gun.jpeg");
   machine = loadImage("bullet.png");
 }
@@ -34,9 +34,9 @@ function preload() {
 function setup() {
   createCanvas(windowWidth, windowHeight);
   colorMode(HSB, 360, 100, 100, 100);
-  figureeWidth = windowWidth/8;
-  figureeHeight = windowHeight/12;
-  figureeDirection = 1;
+  enemyWidth = windowWidth/8;
+  enemyHeight = windowHeight/12;
+  enemyDirection = 1;
 }
 
 function draw() {
@@ -50,7 +50,7 @@ function draw() {
   if (state === "main") {
     noCursor;
     image(mapp, 0, 0, windowWidth, windowHeight);
-    image(figuree);
+    image(enemy, 400, 400);
     figureMovement();
     image(crosshair, mouseX, mouseY, crosshair.width*scalar, crosshair.height*scalar);
   }
@@ -107,13 +107,13 @@ function mouseInsideRect(left, right, top, bottom) {
 }
 
 function figureMovement() {
-  figureeX += windowWidth/(400/6) * figureeDirection;
+  enemyX += windowWidth/(400/6) * enemyDirection;
   
-  if (figureeX + figureeWidth/2 >= windowWidth) {
-    figureeDirection = -1;
+  if (enemyX + enemyWidth/2 >= windowWidth) {
+    enemyDirection = -1;
   }
 
-  else if (figureeX <= 0 -figureeWidth/2) {
-    figureeDirection = 1;
+  else if (enemyX <= 0 - enemyWidth/2) {
+    enemyDirection = 1;
   }
 }
