@@ -51,7 +51,7 @@ function draw() {
     noCursor;
     image(mapp, 0, 0, windowWidth, windowHeight);
     image(enemy, 400, 400);
-    figureMovement();
+    enemyMovement();
     image(crosshair, mouseX, mouseY, crosshair.width*scalar, crosshair.height*scalar);
   }
   for (let bullet of bullets){
@@ -106,7 +106,7 @@ function mouseInsideRect(left, right, top, bottom) {
   return mouseX >= left && mouseX <= right && mouseY >= top && mouseY <= bottom;
 }
 
-function figureMovement() {
+function enemyMovement() {
   enemyX += windowWidth/(400/6) * enemyDirection;
   
   if (enemyX + enemyWidth/2 >= windowWidth) {
