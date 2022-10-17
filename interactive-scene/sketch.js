@@ -26,7 +26,7 @@ let machine;
 function preload() {
   mapp = loadImage("Map.jpeg");
   crosshair = loadImage("crosshair.jpeg");
-  enemy = loadImage("character.JPEG");
+  enemy = loadImage("figure.jpeg");
   gunn = loadImage("gun.jpeg");
   machine = loadImage("bullet.png");
 }
@@ -50,7 +50,10 @@ function draw() {
   if (state === "main") {
     noCursor;
     image(mapp, 0, 0, windowWidth, windowHeight);
-    image(enemy, 400, 400);
+    image(enemy, 643, 351, 100, 120);
+    image(enemy, 374, 416, 100, 120);
+    image(enemy, 814, 429, 100, 120);
+    image(enemy, 1411, 443, 100, 120);
     enemyMovement();
     image(crosshair, mouseX, mouseY, crosshair.width*scalar, crosshair.height*scalar);
   }
@@ -63,11 +66,14 @@ function mousePressed() {
   if (state === "start" && mouseInsideRect(windowWidth/2.5, windowWidth/2.5+250, windowHeight/2.5, windowHeight/2.5+150)) {
     state = "main";
   }
-  let bullet = {
-    x: mouseX,
-    y: mouseY 
-  };
-  bullets.push(bullet);
+  if (state === "main") {
+    let machine = {
+      x: mouseX,
+      y: mouseY 
+    };
+    bullets.push(machine);
+  }
+  console.log(mouseX, mouseY);
 }
 
 function data() {
