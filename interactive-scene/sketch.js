@@ -55,23 +55,16 @@ function draw() {
     image(enemy, 814, 429, 100, 120);
     image(enemy, 1411, 443, 100, 120);
     enemyMovement();
+    image(machine, mouseX + 18, mouseY - 8, 15, 30);
     image(crosshair, mouseX, mouseY, crosshair.width*scalar, crosshair.height*scalar);
   }
-  for (let bullet of bullets){
-    image(machine, mouseX + 18, mouseY -8, 15, 30);
-  }
+  bulletSpawn();
+  enemy.x += 2;
 }
 
 function mousePressed() {
   if (state === "start" && mouseInsideRect(windowWidth/2.5, windowWidth/2.5+250, windowHeight/2.5, windowHeight/2.5+150)) {
     state = "main";
-  }
-  if (state === "main") {
-    let machine = {
-      x: mouseX,
-      y: mouseY 
-    };
-    bullets.push(machine);
   }
   console.log(mouseX, mouseY);
 }
@@ -106,6 +99,22 @@ function startScreen() {
     text("START", width/2.35, height/1.95,);  
   }
   
+}
+
+function bulletSpawn() {
+  for (let i = 0, i < bullets.length; i++){
+    machine(i.x, i.y);
+    b.y -= 2; 
+  }
+
+
+  if (state === "main") {
+    let machine = {
+      x: mouseX,
+      y: mouseY 
+    };
+    bullets.push(machine);
+  }
 }
 
 function mouseInsideRect(left, right, top, bottom) {
