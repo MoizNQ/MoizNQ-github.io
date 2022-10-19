@@ -9,16 +9,17 @@ let x;
 let y;
 let mapp;
 let crosshair;
-let enemy, enemyDirection, enemyWidth, enemyHeight, enemyX, enemyY;
 let scalar = 0.3;
 let button = false;
 let theTime;
-let enemyKilled;
+let enemy;
+let enemies = [];
 let mouseCursor;
 let state = "start";
 let color1;
 let color2;
 let gunn;
+let bullet;
 let bullets = [];
 let previousTime = 0;
 let machine;
@@ -26,7 +27,6 @@ let machine;
 function preload() {
   mapp = loadImage("Map.jpeg");
   crosshair = loadImage("crosshair.jpeg");
-  enemy = loadImage("figure.jpeg");
   gunn = loadImage("gun.jpeg");
   machine = loadImage("bullet.png");
 }
@@ -34,9 +34,13 @@ function preload() {
 function setup() {
   createCanvas(windowWidth, windowHeight);
   colorMode(HSB, 360, 100, 100, 100);
-  enemyWidth = windowWidth/8;
-  enemyHeight = windowHeight/12;
-  enemyDirection = 1;
+
+  for (let i = 0; i < 10; i++) {
+    let enemy = {
+      x: random(0 , width),
+      y: random(-800, 0)
+    };
+  }
 }
 
 function draw() {
@@ -50,16 +54,24 @@ function draw() {
   if (state === "main") {
     noCursor;
     image(mapp, 0, 0, windowWidth, windowHeight);
-    image(enemy, 643, 351, 100, 120);
-    image(enemy, 374, 416, 100, 120);
-    image(enemy, 814, 429, 100, 120);
-    image(enemy, 1411, 443, 100, 120);
-    enemyMovement();
     image(machine, mouseX + 18, mouseY - 8, 15, 30);
     image(crosshair, mouseX, mouseY, crosshair.width*scalar, crosshair.height*scalar);
   }
   bulletSpawn();
-  enemy.x += 2;
+  
+  for (let enemy of enemies) {
+    enemy.y += 5;
+    rect(enemy.x, enemy.y, 5);
+  }
+
+  for(let enemy of enemies) {
+    for(let bullet of bullets) {
+      if(dist(enemy.x ,  enemy.y, bullet.x, bullet.y) < 5) {
+        enemies.splice(enemies.indexOf(enemy), 1);
+        bullets.splice(bullets.indexOf(bullet), 1);
+      }
+    } 
+  }
 }
 
 function mousePressed() {
@@ -101,13 +113,7 @@ function startScreen() {
   
 }
 
-function bulletSpawn() {
-  for (let i = 0, i < bullets.length; i++){
-    machine(i.x, i.y);
-    b.y -= 2; 
-  }
-
-
+function bulletSpawn(){
   if (state === "main") {
     let machine = {
       x: mouseX,
@@ -119,16 +125,4 @@ function bulletSpawn() {
 
 function mouseInsideRect(left, right, top, bottom) {
   return mouseX >= left && mouseX <= right && mouseY >= top && mouseY <= bottom;
-}
-
-function enemyMovement() {
-  enemyX += windowWidth/(400/6) * enemyDirection;
-  
-  if (enemyX + enemyWidth/2 >= windowWidth) {
-    enemyDirection = -1;
-  }
-
-  else if (enemyX <= 0 - enemyWidth/2) {
-    enemyDirection = 1;
-  }
 }
