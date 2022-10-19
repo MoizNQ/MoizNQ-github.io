@@ -5,22 +5,32 @@
 // Extra for Experts:
 // - describe what you did to take this project "above and beyond"
 
-let x;
-let y;
-let radius;
-let time = 0;
+let allCircle = [];
+
+function keyPressed() {
+  let theBall = {
+    x: random(width),
+    y: random(height),
+    radius: random(50, 100),
+    time: random(5000),
+  };
+  allCirlces.push(theBall);
+}
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
-  x = width/2;
-  y = height/2;
-  radius = 75;
 }
 
 function draw() {
   background(0);
   fill("white");
-  x = noise(time)* width;
-  time += 0.01;
-  circle(x, y, radius*2);
+  
+  for (let i = 0; i < allCirlces.length, i++){
+    allCircle[i].x = noise(allCircle[i].time)* width;
+    allCircle[i].y = noise(allCircle[i].time)* height;
+    allCircle[i].time += 0.01;
+    circle(allCircle[i].x, allCircle[i].y, allCircle[i].radius*2);
+  
+  }
+
 }
