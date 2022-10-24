@@ -3,7 +3,9 @@
 // Sept 21, 2022
 //
 // Extra for Experts:
-// - Learning how to use gradient for background changes, 
+// - Learning how to use gradient for background changes, I wasn't able to finish up coding to make my thing work even after spending a lot of time
+// I hope you understand, I will make sure my next project will be submitted on time and be better. I ave commented out what I wanted certain code to be like,
+// Again I apologize to not complete the project at the given time  even after extension.
 
 let x;
 let y;
@@ -35,6 +37,7 @@ function setup() {
   createCanvas(windowWidth, windowHeight);
   colorMode(HSB, 360, 100, 100, 100);
 
+  // Making the enemies to spawn at a specfic point.
   for (let i = 0; i < 10; i++) {
     let enemy = {
       x: random(0 , width),
@@ -47,6 +50,7 @@ function draw() {
   background(220);
   image(gunn, 0, 0, windowWidth, windowHeight);
 
+  // Mostly the Start page
   keyIsDown();
   if (state === "start") {
     startScreen();
@@ -59,11 +63,13 @@ function draw() {
   }
   bulletSpawn();
   
+  // The physical appearance of the enemies
   for (let enemy of enemies) {
     enemy.y += 5;
     rect(enemy.x, enemy.y, 5);
   }
 
+  // The collision b/w the enemies and the bullets
   for(let enemy of enemies) {
     for(let bullet of bullets) {
       if(dist(enemy.x ,  enemy.y, bullet.x, bullet.y) < 5) {
@@ -112,6 +118,8 @@ function startScreen() {
   }
   
 }
+
+// Spawn bullets but since I was using the image, I wasn't able to get it work.
 
 function bulletSpawn(){
   if (state === "main") {
