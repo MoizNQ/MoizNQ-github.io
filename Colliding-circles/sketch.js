@@ -27,7 +27,7 @@ function draw() {
           let tempDy = theCircles[i].dy;
           theCircles[i].dx = theCircles[j].dx;
           theCircles[i].dy = theCircles[j].dy;
-          theCircles[js].dx = tempDx;
+          theCircles[j].dx = tempDx;
           theCircles[j].dy = tempDy;
           
         }
