@@ -1,6 +1,6 @@
-// Project Title
-// Your Name
-// Date
+// Piano Tiles
+// Moiz Naqvi
+// Oct 31, 2022
 //
 // Extra for Experts:
 // - describe what you did to take this project "above and beyond"
@@ -48,6 +48,17 @@ function draw() {
   drawTiles();
 
   handleState();
+
+  if (time === true) {
+    if (tiles[tiles.length-1].arrive()) {
+      tiles.push(new tiles(int(random)));
+    }
+  }
+
+  for (let tile of tiles) {
+    tile.show();
+    tile.move();
+  }
 }
 
 /**
