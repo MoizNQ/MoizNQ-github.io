@@ -1,7 +1,7 @@
-const WIDTH = 100;
-const HEIGHT = 150;
+let tileWidth = 100;
+let tileHeight = 150;
 
-const WINNING_SCORE = 30;
+let WINNING_SCORE = 30;
 
 let time; // countdown
 let score; // number of tiles clicked correctly
@@ -12,16 +12,18 @@ let won; // whether the WINNING_SCORE was reached or not
 let safeTile;
 let notSafeTile;
 let deadTile;
+let finishScreen;
 let tiles = []; // holds field
 
-function preLoad() {
+function preload() {
   safeTile = loadImage("whitetile.png");
   notSafeTile = loadImage("blacktile.png");
   deadTile = loadImage("redtile.png");
+  finishScreen = loadImage("endscreen.png");
 }
 
 function setup() {
-  createCanvas(401, 601); // keep borders (1 pixel padding)
+  createCanvas(windowWidth, windowHeight); // keep borders (1 pixel padding)
 
   time = -3; // countdown begins at three
   score = 0;
@@ -40,23 +42,32 @@ function setup() {
 
 function draw() {
   background(51);
-
-  drawTiles();
-
+  drawingTiles();
   handleState();
+  rectMode = CENTER;
 }
 
 /**
  * draws all tiles
  */
-function drawTiles() {
+function drawingTiles() {
 
   for (let i = 0; i < tiles.length; i++) {
 
-    let x = i % 4 * WIDTH;
-    let y = Math.floor(i / 4) * HEIGHT;
-    fill(tiles[i] !== 0 ? tiles[i] === 1 ? "#FFFFFF" : "#FF0000" : "#000000");
-    rect(x, y, WIDTH, HEIGHT);
+    let x = i % 4 * tileWidth;
+    let y = Math.floor(i / 4) * tileHeight;
+    if (tiles[i] === 0) {
+      // Suppose to be white tile :D
+      image(notSafeTile, x, y, tileWidth, tileHeight);
+    }
+    else if (tiles[i] === 1) {
+      // Suppose to be the safe black tile
+      image(safeTile, x, y, tileWidth, tileHeight);
+    }
+    else {
+      // Suppose to be the red tile when you press the white
+      image(deadTile, x, y, tileWidth, tileHeight);
+    }
   }
 }
 
@@ -94,7 +105,7 @@ function handleState() {
     /* draw time */
     textSize(90);
     fill("#FFFF00");
-    text(getTime(), width / 2, HEIGHT);
+    text(getTime(), width / 2, height);
     time++;
   }
 }
@@ -106,7 +117,7 @@ function drawEnd(won) {
 
   if (won) {
 
-    background("#66EE66");
+    background(image(finishScreen, 0, 0, width, height));
 
     fill("#FFFFFF");
     textSize(60);
@@ -141,7 +152,7 @@ function mousePressed() {
     return;
   }
 
-  if (mouseY >= 3 * HEIGHT && mouseY <= 4 * HEIGHT) {
+  if (mouseY >= 3 * tileHeight && mouseY <= 4 * tileHeight) {
     // check if click is within canvas bounds
 
     let tile = getClickedTile(mouseX, mouseY);
@@ -182,8 +193,8 @@ function getClickedTile(mX) {
 
   for (let i = 0; i < 4; i++) {
 
-    let lowerBound = i * WIDTH;
-    let upperBound = (i + 1) * WIDTH;
+    let lowerBound = i * tileWidth;
+    let upperBound = (i + 1) * tileWidth;
     if (mX >= lowerBound && mX <= upperBound) {
       return i + 12; // only return for bottom row, which is 3 rows of 4 deep in the array
     }
