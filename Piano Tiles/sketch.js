@@ -1,11 +1,3 @@
-// Piano Tiles
-// Moiz Naqvi
-// Oct 31, 2022
-//
-// Extra for Experts:
-// - describe what you did to take this project "above and beyond"
-
-
 const WIDTH = 100;
 const HEIGHT = 150;
 
@@ -17,12 +9,16 @@ let score; // number of tiles clicked correctly
 let playing; // determine state
 let won; // whether the WINNING_SCORE was reached or not
 
-/*
- *  -1 = red
- *   0 = black
- *   1 = white
- */
+let safeTile;
+let notSafeTile;
+let deadTile;
 let tiles = []; // holds field
+
+function preLoad() {
+  safeTile = loadImage("whitetile.png");
+  notSafeTile = loadImage("blacktile.png");
+  deadTile = loadImage("redtile.png");
+}
 
 function setup() {
   createCanvas(401, 601); // keep borders (1 pixel padding)
@@ -48,17 +44,6 @@ function draw() {
   drawTiles();
 
   handleState();
-
-  if (time === true) {
-    if (tiles[tiles.length-1].arrive()) {
-      tiles.push(new tiles(int(random)));
-    }
-  }
-
-  for (let tile of tiles) {
-    tile.show();
-    tile.move();
-  }
 }
 
 /**
@@ -70,12 +55,6 @@ function drawTiles() {
 
     let x = i % 4 * WIDTH;
     let y = Math.floor(i / 4) * HEIGHT;
-
-    /*
-     *  -1 = red
-     *   0 = black
-     *   1 = white
-     */
     fill(tiles[i] !== 0 ? tiles[i] === 1 ? "#FFFFFF" : "#FF0000" : "#000000");
     rect(x, y, WIDTH, HEIGHT);
   }
@@ -157,7 +136,8 @@ function drawEnd(won) {
  */
 function mousePressed() {
 
-  if (!playing) { // don't allow input if the player isn't playing 
+  if (!playing) { //  don't allow input if the player isn't playing
+  
     return;
   }
 
@@ -166,7 +146,7 @@ function mousePressed() {
 
     let tile = getClickedTile(mouseX, mouseY);
 
-    if (tile === -1) {// they clicked out of bounds
+    if (tile === -1) { // they clicked out of bounds
     
       return;
     }
