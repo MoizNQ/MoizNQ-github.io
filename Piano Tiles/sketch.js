@@ -41,7 +41,7 @@ function setup() {
 }
 
 function draw() {
-  background(51);
+  background(0);
   drawingTiles();
   handleState();
   rectMode = CENTER;
@@ -191,7 +191,7 @@ function mousePressed() {
  */
 function getClickedTile(mX) {
 
-  for (let i = 0; i < 4; i++) {
+  for (let i = 0; i < 8; i++) {
 
     let lowerBound = i * tileWidth;
     let upperBound = (i + 1) * tileWidth;
@@ -213,6 +213,7 @@ function newRow() {
   for (let i = 0; i < 4; i++) {
 
     tiles.unshift(column === i ? 0 : 1); // push tiles to the front, A.K.A. top
+    // tiles[0].move();
   }
 
 }
