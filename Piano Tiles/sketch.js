@@ -1,30 +1,32 @@
-let tileWidth = 100;
-let tileHeight = 150;
-
-let WINNING_SCORE = 30;
-
-let time; // countdown
-let score; // number of tiles clicked correctly
-
-let playing; // determine state
-let won; // whether the WINNING_SCORE was reached or not
-
-let safeTile;
-let notSafeTile;
-let deadTile;
-let finishScreen;
-let tiles = []; // holds field
+let tileWidth = 100; /* setting tile */
+let tileHeight =  150;  /* size */
+let winningPoints = 40;
+let time; // the timer for countdown
+let score; // number of tiles clicked without mistakes
+let playing; // state while the user is playing
+let won; // whether the winningPoints was reached or not
+let clickingSound; // the sound that will be created when we click a tile
+let wrongClicked; // the sound that will be created when we click on the wrong tile
+let safeTile; // the galaxy texture  a.k.a the black tile
+let notSafeTile; // the wooden texture tile a.k.a the white tile
+let deadTile; // the lava texture a.k.a the red tile
+let finishScreen; // the screen which pops after we won
+let tiles = []; // holding the amount of tiles that will appear
+let state = "start";
+let backScreen;
 
 function preload() {
   safeTile = loadImage("whitetile.png");
   notSafeTile = loadImage("blacktile.png");
   deadTile = loadImage("redtile.png");
   finishScreen = loadImage("endscreen.png");
+  clickingSound = loadSound("piano.wav");
+  wrongClicked = loadSound("angry.wav");
+  backScreen = loadImage("piano.png");
 }
 
 function setup() {
   createCanvas(windowWidth, windowHeight); // keep borders (1 pixel padding)
-
   time = -3; // countdown begins at three
   score = 0;
 
@@ -42,16 +44,50 @@ function setup() {
 
 function draw() {
   background(0);
-  drawingTiles();
-  handleState();
-  rectMode = CENTER;
+  
+  keyIsDown();
+  if (state === "start") {
+    startScreen();
+  }
+  if (state === "main") {
+    drawingTiles();
+    handleState();
+    drawEnd();
+  }
+  if (state === "end") {
+    drawEnd();
+  }
 }
 
-/**
- * draws all tiles
- */
-function drawingTiles() {
+function startScreen() {
+  image(backScreen, 0, 0, windowWidth, windowHeight);
+  let gradient = drawingContext.createLinearGradient(width/2.5-200, width/2.5-200, height/2.5+150, height/2.5+200);
+  gradient.addColorStop(0, color(254, 60, 110, 65));
+  gradient.addColorStop(1, color(172, 60, 110, 65));
+  rect(width/2.5, height/2.5, 250, 150, 20);
+  stroke(255);
+  strokeWeight(1);
 
+  if (mouseInsideRect(windowWidth/2.5, windowWidth/2.5+250, windowHeight/2.5, windowHeight/2.5+150)) {
+    drawingContext.strokeStyle = gradient;
+    textSize(50);
+    text("START", width/2.1, height/1.95,);
+
+  }
+  else {
+    drawingContext.fillStyle = gradient;
+    textSize(50);
+    text("START", width/2.1, height/1.95,);  
+  }
+  
+}
+
+function mouseInsideRect(left, right, top, bottom) {
+  return mouseX >= left && mouseX <= right && mouseY >= top && mouseY <= bottom;
+}
+
+function drawingTiles() {
+// drawing tiles with different textures
   for (let i = 0; i < tiles.length; i++) {
 
     let x = i % 4 * tileWidth;
@@ -63,6 +99,14 @@ function drawingTiles() {
     else if (tiles[i] === 1) {
       // Suppose to be the safe black tile
       image(safeTile, x, y, tileWidth, tileHeight);
+      if (!clickingSound.isPlaying() === playing) {
+        clickingSound.play(0.1, 1, 0.5, 2);
+        if (tiles[i] === 0) {
+          clickingSound.stop();
+          wrongClicked.play(0.1, 1, 0.5, 2);
+        }
+      }
+
     }
     else {
       // Suppose to be the red tile when you press the white
@@ -89,10 +133,10 @@ function handleState() {
       textSize(60);
       fill("#FF0000");
       text(-time, width / 2, height / 2);
+      textFont("Georgia");
 
       /* count down countdown */
       if (frameCount % 60 === 0) {
-
         time++;
         if (time === 0) {
           playing = true;
@@ -116,7 +160,6 @@ function handleState() {
 function drawEnd(won) {
 
   if (won) {
-
     background(image(finishScreen, 0, 0, width, height));
 
     fill("#FFFFFF");
@@ -139,6 +182,7 @@ function drawEnd(won) {
     text("Game Over!", width / 2, height / 2);
     textSize(40);
     text("Press f5 to restart!", width / 2, height / 2 + 50);
+    textFont("Georgia");
   }
 }
 
@@ -146,6 +190,9 @@ function drawEnd(won) {
  * handling user input
  */
 function mousePressed() {
+  if (state === "start" && mouseInsideRect(windowWidth/2.5, windowWidth/2.5+250, windowHeight/2.5, windowHeight/2.5+150)) {
+    state = "main";
+  }
 
   if (!playing) { //  don't allow input if the player isn't playing
   
@@ -154,6 +201,7 @@ function mousePressed() {
 
   if (mouseY >= 3 * tileHeight && mouseY <= 4 * tileHeight) {
     // check if click is within canvas bounds
+    
 
     let tile = getClickedTile(mouseX, mouseY);
 
@@ -174,7 +222,7 @@ function mousePressed() {
       score++;
       newRow();
 
-      if (score >= WINNING_SCORE) {
+      if (score >= winningPoints) {
         /* end game */
 
         won = true;
@@ -192,10 +240,9 @@ function mousePressed() {
 function getClickedTile(mX) {
 
   for (let i = 0; i < 8; i++) {
-
-    let lowerBound = i * tileWidth;
-    let upperBound = (i + 1) * tileWidth;
-    if (mX >= lowerBound && mX <= upperBound) {
+    let goingDown = i * tileWidth;
+    let goingUp = (i + 1) * tileWidth;
+    if (mX >= goingDown && mX <= goingUp) {
       return i + 12; // only return for bottom row, which is 3 rows of 4 deep in the array
     }
   }
