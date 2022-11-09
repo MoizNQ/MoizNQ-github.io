@@ -52,7 +52,9 @@ function draw() {
   if (state === "main") {
     drawingTiles();
     handleState();
-    drawEnd();
+    if (state === "won") {
+      drawEnd();
+    }
   }
   if (state === "end") {
     drawEnd();
@@ -72,12 +74,14 @@ function startScreen() {
     drawingContext.strokeStyle = gradient;
     textSize(50);
     text("START", width/2.1, height/1.95,);
+    textFont("Georgia");
 
   }
   else {
     drawingContext.fillStyle = gradient;
     textSize(50);
     text("START", width/2.1, height/1.95,);  
+    textFont("Georgia");
   }
   
 }
@@ -99,20 +103,19 @@ function drawingTiles() {
     else if (tiles[i] === 1) {
       // Suppose to be the safe black tile
       image(safeTile, x, y, tileWidth, tileHeight);
-      if (!clickingSound.isPlaying() === playing) {
-        clickingSound.play(0.1, 1, 0.5, 2);
-        if (tiles[i] === 0) {
-          clickingSound.stop();
-          wrongClicked.play(0.1, 1, 0.5, 2);
-        }
-      }
-
     }
     else {
       // Suppose to be the red tile when you press the white
       image(deadTile, x, y, tileWidth, tileHeight);
     }
+    // Depending on what tile the user clicks, the certain music returns.
+    if (!clickingSound.isPlaying() === playing) {
+      if (tiles[i] === 1 && mouseX && mouseY) {
+        clickingSound.play(0.1, 1, 0.5);
+      }
+    }
   }
+  
 }
 
 /**
@@ -120,18 +123,15 @@ function drawingTiles() {
  */
 function handleState() {
 
-  if (!playing) { // if we are not playing
-
+  if (!playing) { // if we are not playing 
     if (time > 0) { // if we are not in the countdown
       /* endGame */
-
       drawEnd(won);
     }
     else { // pre-game
-
       /* draw countdown */
-      textSize(60);
-      fill("#FF0000");
+      textSize(100);
+      fill("red");
       text(-time, width / 2, height / 2);
       textFont("Georgia");
 
@@ -145,43 +145,40 @@ function handleState() {
     }
   }
   else { // still playing
-
     /* draw time */
-    textSize(90);
-    fill("#FFFF00");
-    text(getTime(), width / 2, height);
+    textSize(65);
+    fill(255);
+    text(getTime(), width / 2, height-20);
+    textFont("Georgia");
     time++;
   }
 }
 
-/**
- * based upon won, this will draw a "complete" message, or a "you lose" message
- */
+// Based on how you play, a message will be displayed
 function drawEnd(won) {
 
   if (won) {
     background(image(finishScreen, 0, 0, width, height));
 
-    fill("#FFFFFF");
+    fill(255);
     textSize(60);
-    text("Complete!", width / 2, height / 2 - 80);
+    text("YOU WON, GGs", width / 2, height / 2 - 80);
+    textFont("Georgia");
 
-    fill("#000000");
-    textSize(70);
+    textSize(60);
     text(getTime(), width / 2, height / 2);
+    textFont("Georgia");
 
-    fill("#FFFFFF");
     textSize(40);
-    text("Press f5 to restart!", width / 2, height / 2 + 50);
-
+    text("Press F5 to play again!", width / 2, height / 2 + 50);
+    textFont("Georgia");
   }
   else {
-
-    fill("#FF00FF");
+    fill(255);
     textSize(60);
-    text("Game Over!", width / 2, height / 2);
+    text("You clicked the wrong tile :((", width / 2, height / 2);
     textSize(40);
-    text("Press f5 to restart!", width / 2, height / 2 + 50);
+    text("Press F5 to restart!", width / 2, height / 2 + 50);
     textFont("Georgia");
   }
 }
@@ -193,38 +190,28 @@ function mousePressed() {
   if (state === "start" && mouseInsideRect(windowWidth/2.5, windowWidth/2.5+250, windowHeight/2.5, windowHeight/2.5+150)) {
     state = "main";
   }
-
   if (!playing) { //  don't allow input if the player isn't playing
-  
     return;
   }
 
   if (mouseY >= 3 * tileHeight && mouseY <= 4 * tileHeight) {
     // check if click is within canvas bounds
-    
-
     let tile = getClickedTile(mouseX, mouseY);
-
     if (tile === -1) { // they clicked out of bounds
-    
       return;
     }
 
     if (tiles[tile] !== 0) {
       /* end game */
-
       tiles[tile] = -1;
-
       won = false;
       playing = false;
     }
     else {
       score++;
       newRow();
-
       if (score >= winningPoints) {
         /* end game */
-
         won = true;
         playing = false;
       }
@@ -238,7 +225,6 @@ function mousePressed() {
  * only returns bottom row tiles
  */
 function getClickedTile(mX) {
-
   for (let i = 0; i < 8; i++) {
     let goingDown = i * tileWidth;
     let goingUp = (i + 1) * tileWidth;
@@ -246,29 +232,19 @@ function getClickedTile(mX) {
       return i + 12; // only return for bottom row, which is 3 rows of 4 deep in the array
     }
   }
-
   return -1; // click was out of bounds
 }
 
-/**
- * push a new row
- */
+// pushing 1 and a half row everytime a user clicks a tile
 function newRow() {
-
   let column = Math.floor(random(4));
-
   for (let i = 0; i < 4; i++) {
-
-    tiles.unshift(column === i ? 0 : 1); // push tiles to the front, A.K.A. top
+    tiles.unshift(column === i ? 0 : 1);
     // tiles[0].move();
   }
-
 }
 
-/**
- * returns formatted time, e.g.: "12.345\""
- */
+// Timer with seconds and milliseconds
 function getTime() {
-
   return Math.floor(time / 60) + "." + Math.floor(map(time % 60, 0, 59, 0, 999)) + "\"";
 }
