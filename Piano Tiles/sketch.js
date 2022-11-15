@@ -1,3 +1,9 @@
+// PIANO TILES
+// Mr Schellenberg
+// Moiz Naqvi
+// Extra for expert : Using sounds 
+
+
 let tileWidth = 100; /* setting tile */
 let tileHeight =  150;  /* size */
 let winningPoints = 40;
@@ -30,7 +36,7 @@ function setup() {
   time = -3; // countdown begins at three
   score = 0;
 
-  /* initializing first rows */
+  // Displaying the first 4x4 tiles in a rows and columns
   for (let i = 0; i < 4; i++) {
 
     newRow();
@@ -51,13 +57,13 @@ function draw() {
   }
   if (state === "main") {
     drawingTiles();
-    handleState();
+    stateHandling();
     if (state === "won") {
       drawEnd();
     }
   }
   if (state === "end") {
-    drawEnd();
+    drawEnd(won);
   }
 }
 
@@ -110,32 +116,30 @@ function drawingTiles() {
     }
     // Depending on what tile the user clicks, the certain music returns.
     if (!clickingSound.isPlaying() === playing) {
-      if (tiles[i] === 1 && mouseX && mouseY) {
-        clickingSound.play(0.1, 1, 0.5);
+      if (tiles[i] === 1 ) {
+        clickingSound.jump(1, 2);
       }
     }
   }
   
 }
 
-/**
- * draws correct screens depending on the state of the game
- */
-function handleState() {
+// Draw screen according to what the state is...
+function stateHandling() {
 
   if (!playing) { // if we are not playing 
     if (time > 0) { // if we are not in the countdown
-      /* endGame */
+      // when the game ends
       drawEnd(won);
     }
-    else { // pre-game
-      /* draw countdown */
+    else { 
+      // Counter before the game
       textSize(100);
       fill("red");
       text(-time, width / 2, height / 2);
       textFont("Georgia");
 
-      /* count down countdown */
+      // Counter for the game
       if (frameCount % 60 === 0) {
         time++;
         if (time === 0) {
@@ -145,20 +149,18 @@ function handleState() {
     }
   }
   else { // still playing
-    /* draw time */
     textSize(65);
     fill(255);
-    text(getTime(), width / 2, height-20);
+    text(increaseTimer(), width / 2, height-20);
     textFont("Georgia");
     time++;
   }
 }
 
 // Based on how you play, a message will be displayed
-function drawEnd(won) {
+function drawEnd() {
 
   if (won) {
-    background(image(finishScreen, 0, 0, width, height));
 
     fill(255);
     textSize(60);
@@ -166,7 +168,7 @@ function drawEnd(won) {
     textFont("Georgia");
 
     textSize(60);
-    text(getTime(), width / 2, height / 2);
+    text(increaseTimer(), width / 2, height / 2);
     textFont("Georgia");
 
     textSize(40);
@@ -220,10 +222,7 @@ function mousePressed() {
 
 }
 
-/**
- * returns index of clicked tile
- * only returns bottom row tiles
- */
+// pushes a new row of tiles everytime a tile is clicked
 function getClickedTile(mX) {
   for (let i = 0; i < 8; i++) {
     let goingDown = i * tileWidth;
@@ -239,12 +238,13 @@ function getClickedTile(mX) {
 function newRow() {
   let column = Math.floor(random(4));
   for (let i = 0; i < 4; i++) {
+
     tiles.unshift(column === i ? 0 : 1);
     // tiles[0].move();
   }
 }
 
 // Timer with seconds and milliseconds
-function getTime() {
+function increaseTimer() {
   return Math.floor(time / 60) + "." + Math.floor(map(time % 60, 0, 59, 0, 999)) + "\"";
 }
