@@ -22,6 +22,10 @@ class Particle {
     stroke(this.color);
     circle(this.x, this.y, this.diameter);
   }
+
+  isDead() {
+    return this.alpha <= 0;
+  }
 }
 
 let theFireworks = [];
@@ -34,12 +38,18 @@ function draw() {
   background(0);
   for (let i = 0; i < theFireworks.length; i++) {
     theFireworks[i].update();
-    theFireworks[i].display();
+    if (theFireworks[i].isDead()) {
+      //remove from array
+      theFireworks.splice(i, 1);
+    }
+    else {
+      theFireworks[i].display();
+    }
   }
 }
 
 function mousePressed() {
-  for (let i = 0; i < 100; i++) {
+  for (let i = 0; i < 50; i++) {
     let someParticle = new Particle(mouseX, mouseY);
     theFireworks.push(someParticle);
   }
