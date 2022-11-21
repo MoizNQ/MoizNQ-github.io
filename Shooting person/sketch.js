@@ -11,7 +11,7 @@ class Bullet {
     this.x += this.dx;
   }
   display() {
-    circle(this.x, this.y, this.radius);
+    image(cannonBall, this.x, this.y, cannonBall.width*this.radius, cannonBall.height*this.radius);
   }
   isDead() {
     return this.x <= 0 || this.x >= width;
@@ -24,6 +24,13 @@ let character = {
 };
 
 let bullets = [];
+let cannonBall;
+let cannonCart;
+
+function preload() {
+  cannonBall = loadImage("ball.gif");
+  cannonCart = loadImage("cannon2.gif");
+}
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
@@ -33,7 +40,7 @@ function setup() {
 
 function draw() {
   background(220);
-  rect(character.x, character.y, 25, 25);
+  image(cannonCart, character.x, character.y, 25, 25);
   for(let i = 0; i < bullets.length;i++) {
     bullets[i].move();
     bullets[i].display();
